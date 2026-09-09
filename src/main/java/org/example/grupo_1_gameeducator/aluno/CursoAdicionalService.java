@@ -11,4 +11,9 @@ public class CursoAdicionalService {
         // STUB - ainda não implementado (fase RED)
         throw new UnsupportedOperationException("não implementado");
     }
+
+    public boolean estaElegivelParaCursosAdicionais(Aluno aluno) {
+        // TODO implementar: media > 7,0 = elegivel
+        return true;
+    }
 }
