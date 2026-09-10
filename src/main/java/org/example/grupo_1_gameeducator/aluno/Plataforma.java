@@ -27,8 +27,18 @@ public class Plataforma {
     }
 
     public Resgate iniciarResgate(Aluno aluno) {
-        // STUB - ainda não implementado (fase RED)
-        throw new UnsupportedOperationException("não implementado");
+        if (aluno.getMediaCurso() <= MEDIA_MINIMA_PARA_RESGATE) {
+            throw new IllegalStateException("Aluno não atingiu a média mínima para resgatar cursos adicionais");
+        }
+
+        Curso cursoConcluido = ultimoCursoConcluido.get(aluno);
+        List<Curso> cursosRelacionados = catalogoDeCursos.stream()
+                .filter(curso -> curso.getArea().equals(cursoConcluido.getArea()))
+                .filter(curso -> !curso.getNome().equals(cursoConcluido.getNome()))
+                .limit(QTD_CURSOS_DISPONIVEIS)
+                .toList();
+
+        return new Resgate(cursosRelacionados, LIMITE_DE_ESCOLHAS);
     }
 
     private static List<Curso> catalogoPadrao() {
