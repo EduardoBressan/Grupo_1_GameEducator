@@ -13,6 +13,10 @@ public class Aluno {
         this.mediaCurso = mediaCurso;
     }
 
+    public Aluno(String nome) {
+        this(nome, 0.0);
+    }
+
     public double getMediaCurso() { return mediaCurso; }
     public void setMediaCurso(double mediaCurso) { this.mediaCurso = mediaCurso; }
     public List<Curso> getCursosAdicionaisConcedidos() { return cursosAdicionaisConcedidos; }
