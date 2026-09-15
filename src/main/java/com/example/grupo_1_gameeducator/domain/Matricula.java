@@ -1,5 +1,7 @@
-package com.example.grupo_1_gameeducator.aluno;
+package com.example.grupo_1_gameeducator.domain;
 
+// Camada: DOMINIO (TDD).
+// Guarda o vinculo aluno-curso e o resultado obtido.
 public class Matricula {
 
     private final Aluno aluno;

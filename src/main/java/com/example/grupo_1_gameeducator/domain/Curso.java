@@ -1,5 +1,6 @@
-package com.example.grupo_1_gameeducator.aluno;
+package com.example.grupo_1_gameeducator.domain;
 
+// Camada: DOMINIO (TDD).
 public class Curso {
 
     private final String nome;

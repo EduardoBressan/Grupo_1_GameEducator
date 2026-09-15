@@ -1,13 +1,21 @@
-package com.example.grupo_1_gameeducator.aluno;
+package com.example.grupo_1_gameeducator.domainTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.example.grupo_1_gameeducator.domain.Aluno;
+import com.example.grupo_1_gameeducator.domain.Curso;
+import com.example.grupo_1_gameeducator.domain.Matricula;
+import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
+import com.example.grupo_1_gameeducator.domain.SituacaoMatricula;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// BDD: dado que o aluno esta cursando um curso na plataforma, quando ele
-// finalizar o curso com media acima de 7,0, entao ele deve ter direito a
-// realizar mais 3 cursos.
+// BDD (Luiza Bottesi):
+// DADO QUE o aluno esta cursando um curso na plataforma,
+// QUANDO ele finalizar o curso com media acima de 7,0,
+// ENTAO ele deve ter direito a realizar mais 3 cursos.
+//
+// Todos os testes seguem o padrao AAA (Arrange, Act, Assert).
 class PlataformaEnsinoTest {
 
     private PlataformaEnsino plataforma;

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GameEducator - Vue standalone</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f8; padding: 24px; }
+        .box { max-width: 900px; margin: auto; background: #fff; padding: 24px; border-radius: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, textarea, button, select { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+        .destaque { font-weight: bold; color: #1a7f37; }
+    </style>
+</head>
+<body>
+<div id="app" class="box">
+    <h1>GameEducator - Vue.js consumindo a API</h1>
+    <p>Concluir um curso com media acima de 7,0 libera 3 cursos adicionais.</p>
+    <div class="grid">
+        <div>
+            <h2>Alunos</h2>
+            <input v-model="aluno.nome" placeholder="Nome">
+            <input v-model="aluno.email" placeholder="E-mail">
+            <button @click="criarAluno">Criar aluno</button>
+            <button @click="listarAlunos">Atualizar alunos</button>
+            <ul>
+                <li v-for="a in alunos" :key="a.id">
+                    {{ a.id }} - {{ a.nome }} |
+                    <span class="destaque">{{ a.cursosAdicionaisDisponiveis }} adicionais</span>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h2>Cursos</h2>
+            <input v-model="curso.titulo" placeholder="Titulo">
+            <textarea v-model="curso.descricao" placeholder="Descricao"></textarea>
+            <button @click="criarCurso">Criar curso</button>
+            <button @click="listarCursos">Atualizar cursos</button>
+            <ul>
+                <li v-for="c in cursos" :key="c.id">{{ c.id }} - {{ c.titulo }}</li>
+            </ul>
+        </div>
+    </div>
+    <p>{{ mensagem }}</p>
+</div>
+<script>
+const { createApp } = Vue;
+createApp({
+    data() {
+        return {
+            apiBase: 'http://localhost:8080',
+            mensagem: '',
+            alunos: [],
+            cursos: [],
+            aluno: { nome: '', email: '' },
+            curso: { titulo: '', descricao: '' }
+        };
+    },
+    methods: {
+        async request(path, options = {}) {
+            const response = await fetch(this.apiBase + path, {
+                ...options,
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
+            });
+            const texto = await response.text();
+            if (!response.ok) throw new Error(texto || 'Erro');
+            return texto ? JSON.parse(texto) : null;
+        },
+        async listarAlunos() { this.alunos = await this.request('/api/alunos'); },
+        async listarCursos() { this.cursos = await this.request('/api/cursos'); },
+        async criarAluno() {
+            await this.request('/api/alunos', { method: 'POST', body: JSON.stringify(this.aluno) });
+            this.aluno = { nome: '', email: '' };
+            this.mensagem = 'Aluno criado';
+            await this.listarAlunos();
+        },
+        async criarCurso() {
+            await this.request('/api/cursos', { method: 'POST', body: JSON.stringify(this.curso) });
+            this.curso = { titulo: '', descricao: '' };
+            this.mensagem = 'Curso criado';
+            await this.listarCursos();
+        }
+    },
+    mounted() {
+        this.listarAlunos();
+        this.listarCursos();
+    }
+}).mount('#app');
+</script>
+</body>
+</html>
