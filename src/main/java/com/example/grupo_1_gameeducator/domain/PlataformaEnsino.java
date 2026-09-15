@@ -1,32 +1,41 @@
 package com.example.grupo_1_gameeducator.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 // Camada: DOMINIO (TDD).
 //
 // US (ADM): COMO administrador da plataforma, QUERO que o aluno, ao terminar um curso
 // com media acima de 7,0, tenha direito a realizacao de mais 3 cursos, PARA fidelizar
 // alunos a longo prazo e garantir qualidade de ensino.
 //
-// ESTADO ATUAL: PASSO RED DO TDD.
-// Os metodos abaixo sao stubs de proposito: o objetivo desta etapa e que TODOS os
-// testes de PlataformaEnsinoTest falhem antes de existir implementacao.
+// ESTADO ATUAL: PASSO GREEN DO TDD.
+// A implementacao mais simples que faz os 5 testes de PlataformaEnsinoTest passarem.
 public class PlataformaEnsino {
-
-    // -1 (e nao 0) para garantir que ate os testes negativos, que esperam 0, falhem no RED.
-    private static final int NAO_IMPLEMENTADO = -1;
 
     public static final int CURSOS_ADICIONAIS_POR_APROVACAO = 3;
     public static final double MEDIA_MINIMA = 7.0;
+
+    // Saldo de cursos adicionais conquistados por cada aluno.
+    private final Map<Aluno, Integer> cursosAdicionaisPorAluno = new HashMap<>();
 
     public Matricula matricular(Aluno aluno, Curso curso) {
         return new Matricula(aluno, curso);
     }
 
     public void finalizarCurso(Matricula matricula, double media) {
-        // TODO GREEN: concluir a matricula e liberar 3 cursos quando media > 7,0.
+        matricula.registrarResultado(media, SituacaoMatricula.CONCLUIDA);
+
+        // A media precisa ser ACIMA de 7,0. Exatamente 7,0 nao libera nada.
+        if (media > MEDIA_MINIMA) {
+            Aluno aluno = matricula.getAluno();
+            int saldoAtual = cursosAdicionaisPorAluno.getOrDefault(aluno, 0);
+            cursosAdicionaisPorAluno.put(aluno, saldoAtual + CURSOS_ADICIONAIS_POR_APROVACAO);
+        }
     }
 
     public int cursosAdicionaisLiberadosPara(Aluno aluno) {
-        // TODO GREEN: devolver o saldo de cursos adicionais do aluno.
-        return NAO_IMPLEMENTADO;
+        // Aluno que ainda nao concluiu nada com aproveitamento nao tem saldo.
+        return cursosAdicionaisPorAluno.getOrDefault(aluno, 0);
     }
 }
