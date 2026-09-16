@@ -3,13 +3,13 @@ package com.example.grupo_1_gameeducator.domain.vo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-// Value Object: encapsula e valida o titulo do curso.
 @Embeddable
 public class TituloCurso {
 
     @Column(name = "titulo", nullable = false)
     private String valor;
 
+    // So o JPA usa.
     protected TituloCurso() {
     }
 

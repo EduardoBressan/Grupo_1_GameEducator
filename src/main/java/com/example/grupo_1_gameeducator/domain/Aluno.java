@@ -10,12 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Camada: DOMINIO.
-// Segue o formato do projeto modelo da disciplina: a classe de dominio e a
-// propria entidade persistida e usa Value Objects para encapsular os atributos.
-//
-// O saldo de cursos adicionais e o estado central da US escolhida pelo grupo:
-// quantos cursos extras o aluno tem direito de fazer.
 @Entity
 @Table(name = "alunos")
 public class Aluno {
@@ -24,26 +18,25 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @Embedded embute o Value Object dentro da tabela da entidade.
     @Embedded
     private NomeAluno nome;
 
     @Embedded
     private EmailAluno email;
 
+    // Quantos cursos extras o aluno tem direito de fazer.
     @Column(nullable = false)
     private Integer cursosAdicionaisDisponiveis;
 
+    // So o JPA usa.
     protected Aluno() {
     }
 
-    // Usado pelos testes de dominio, onde o e-mail nao importa para a regra.
     public Aluno(String nome) {
         this.nome = new NomeAluno(nome);
         this.cursosAdicionaisDisponiveis = 0;
     }
 
-    // Construtor rico: delega a validacao dos atributos para os Value Objects.
     public Aluno(String nome, String email) {
         this(nome);
         this.email = new EmailAluno(email);
@@ -53,7 +46,6 @@ public class Aluno {
         return id;
     }
 
-    // A entidade expoe String para fora, mas internamente guarda os VOs.
     public String getNome() {
         return nome.getValor();
     }
@@ -66,7 +58,6 @@ public class Aluno {
         return cursosAdicionaisDisponiveis;
     }
 
-    // Credita os cursos adicionais liberados por uma conclusao aprovada.
     public void liberarCursosAdicionais(int quantidade) {
         if (quantidade < 0) {
             throw new IllegalArgumentException("Quantidade de cursos adicionais nao pode ser negativa.");
@@ -74,7 +65,6 @@ public class Aluno {
         this.cursosAdicionaisDisponiveis += quantidade;
     }
 
-    // Consome um curso adicional quando o aluno usa o beneficio.
     public void consumirCursoAdicional() {
         if (this.cursosAdicionaisDisponiveis <= 0) {
             throw new IllegalStateException("Aluno sem cursos adicionais disponiveis.");
@@ -82,7 +72,6 @@ public class Aluno {
         this.cursosAdicionaisDisponiveis--;
     }
 
-    // Alteracoes controladas do estado da entidade.
     public void alterarNome(String nome) {
         this.nome = new NomeAluno(nome);
     }

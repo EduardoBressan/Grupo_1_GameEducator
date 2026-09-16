@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-// Camada: SERVICE.
 @Service
 public class CursoService {
 
@@ -29,7 +28,6 @@ public class CursoService {
         return toDTO(repository.save(curso));
     }
 
-    // Mapeamento manual dominio -> DTO.
     private CursoResponseDTO toDTO(Curso curso) {
         return new CursoResponseDTO(curso.getId(), curso.getTitulo(), curso.getDescricao(), curso.getArea());
     }

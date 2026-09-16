@@ -15,11 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-// Camada: SERVICE.
-// Este service e o ponto onde a aplicacao web encontra as regras de negocio
-// construidas por TDD no pacote domain. A regra em si (quem aprova cursos
-// adicionais, quantos cursos relacionados oferecer) e sempre a mesma testada
-// em domainTest.
+// Quem decide as regras e o PlataformaEnsino, do pacote domain.
 @Service
 public class MatriculaService {
 
@@ -46,7 +42,6 @@ public class MatriculaService {
         Curso curso = cursoRepository.findById(cursoId)
                 .orElseThrow(() -> new RuntimeException("Curso nao encontrado"));
 
-        // Se a matricula usa um dos cursos adicionais conquistados, consome um do saldo.
         if (cursoAdicional) {
             aluno.consumirCursoAdicional();
         }
@@ -60,19 +55,12 @@ public class MatriculaService {
                 .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
 
         matricula.concluirCom(mediaFinal);
-
-        // A decisao e a mesma regra testada por TDD: media ACIMA de 7,0 concede
-        // 3 cursos adicionais, mesmo que o aluno ja tenha usado os anteriores
-        // (cenario do Eduardo: o saldo e cumulativo).
         matricula.getAluno().liberarCursosAdicionais(calcularCursosAdicionaisLiberados(mediaFinal));
 
         return toDTO(matriculaRepository.save(matricula));
     }
 
-    // Cenario do Felipe: ao resgatar, o aluno recebe ate 10 cursos da mesma
-    // area do que concluiu (exceto ele mesmo) e pode escolher 3 - a mesma
-    // regra de PlataformaEnsino.iniciarResgate, aplicada aqui sobre o catalogo
-    // real de cursos cadastrados no banco.
+    // Cursos da mesma area do que o aluno concluiu, para ele escolher 3.
     public ResgateResponseDTO iniciarResgate(Long matriculaId) {
         Matricula matricula = matriculaRepository.findById(matriculaId)
                 .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
@@ -98,8 +86,6 @@ public class MatriculaService {
         return new ResgateResponseDTO(relacionados, PlataformaEnsino.CURSOS_ADICIONAIS_POR_APROVACAO);
     }
 
-    // A regra em si (media ACIMA de 7,0) e a mesma testada em
-    // PlataformaEnsinoTest / ElegibilidadeDeCursosAdicionaisTest.
     private int calcularCursosAdicionaisLiberados(Double mediaFinal) {
         if (mediaFinal == null) {
             return 0;
@@ -109,7 +95,6 @@ public class MatriculaService {
                 : 0;
     }
 
-    // Mapeamento manual dominio -> DTO.
     private MatriculaResponseDTO toDTO(Matricula matricula) {
         Aluno aluno = matricula.getAluno();
         return new MatriculaResponseDTO(

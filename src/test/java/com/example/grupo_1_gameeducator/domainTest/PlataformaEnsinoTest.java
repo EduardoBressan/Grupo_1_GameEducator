@@ -10,12 +10,10 @@ import com.example.grupo_1_gameeducator.domain.StatusMatricula;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// BDD (Integrante 3 - Luiza Bottesi):
+// BDD da Luiza Bottesi (Integrante 3):
 // DADO QUE o aluno esta cursando um curso na plataforma,
 // QUANDO ele finalizar o curso com media acima de 7,0,
 // ENTAO ele deve ter direito a realizar mais 3 cursos.
-//
-// Todos os testes seguem o padrao AAA (Arrange, Act, Assert).
 class PlataformaEnsinoTest {
 
     private PlataformaEnsino plataforma;

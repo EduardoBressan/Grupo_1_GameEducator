@@ -2,9 +2,7 @@ package com.example.grupo_1_gameeducator.domain;
 
 import java.util.List;
 
-// Camada: DOMINIO (TDD).
-// Representa a oferta de cursos relacionados que o aluno recebe ao resgatar
-// os cursos adicionais conquistados: uma lista de opcoes e um limite de escolhas.
+// Cursos oferecidos no resgate e quantos o aluno pode escolher.
 public class Resgate {
 
     private final List<Curso> cursosDisponiveis;

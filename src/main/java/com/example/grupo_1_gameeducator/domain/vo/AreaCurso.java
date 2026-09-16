@@ -3,9 +3,6 @@ package com.example.grupo_1_gameeducator.domain.vo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-// Value Object: encapsula a area do curso.
-// A area e usada no resgate para oferecer cursos relacionados (cenario do Felipe).
-// Quando nao informada, o proprio VO aplica a area padrao.
 @Embeddable
 public class AreaCurso {
 
@@ -14,6 +11,7 @@ public class AreaCurso {
     @Column(name = "area", nullable = false)
     private String valor;
 
+    // So o JPA usa.
     protected AreaCurso() {
     }
 

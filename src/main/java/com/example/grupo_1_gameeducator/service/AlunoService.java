@@ -9,13 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-// Camada: SERVICE. Regras do caso de uso de aluno.
 @Service
 public class AlunoService {
 
     private final AlunoRepository repository;
 
-    // Injecao de dependencia por construtor.
     public AlunoService(AlunoRepository repository) {
         this.repository = repository;
     }
@@ -44,7 +42,6 @@ public class AlunoService {
                 .orElseThrow(() -> new RuntimeException("Aluno nao encontrado"));
     }
 
-    // Mapeamento manual dominio -> DTO.
     private AlunoResponseDTO toDTO(Aluno aluno) {
         return new AlunoResponseDTO(
                 aluno.getId(),

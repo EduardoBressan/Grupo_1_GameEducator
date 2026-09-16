@@ -12,8 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-// Camada: DOMAIN (entidade JPA + regra).
-// Guarda o vinculo aluno-curso e o resultado obtido.
 @Entity
 @Table(name = "matriculas")
 public class Matricula {
@@ -37,10 +35,11 @@ public class Matricula {
     @Column
     private Double mediaFinal;
 
-    // true = o aluno esta usando um dos cursos adicionais conquistados.
+    // true = o aluno esta usando um dos cursos adicionais que conquistou.
     @Column(nullable = false)
     private boolean cursoAdicional;
 
+    // So o JPA usa.
     protected Matricula() {
     }
 
@@ -48,7 +47,6 @@ public class Matricula {
         this(aluno, curso, false);
     }
 
-    // Toda matricula nova nasce EM_ANDAMENTO.
     public Matricula(Aluno aluno, Curso curso, boolean cursoAdicional) {
         this.aluno = aluno;
         this.curso = curso;

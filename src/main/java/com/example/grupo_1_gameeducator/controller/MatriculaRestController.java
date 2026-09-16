@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-// Camada: CONTROLLER.
-// O endpoint de concluir matricula e o que exercita, via HTTP, a regra
-// de negocio construida por TDD (liberar 3 cursos com media acima de 7,0).
-// O endpoint de resgate exercita o cenario do Felipe (escolher 3 entre ate
-// 10 cursos relacionados ao que o aluno concluiu).
 @RestController
 @RequestMapping("/api/matriculas")
 @Tag(name = "Matriculas")

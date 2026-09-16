@@ -3,13 +3,13 @@ package com.example.grupo_1_gameeducator.domain.vo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-// Value Object: encapsula e valida o e-mail do aluno.
 @Embeddable
 public class EmailAluno {
 
     @Column(name = "email", unique = true)
     private String valor;
 
+    // So o JPA usa.
     protected EmailAluno() {
     }
 

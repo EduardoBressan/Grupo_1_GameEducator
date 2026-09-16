@@ -10,8 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Camada: DOMINIO.
-// Curso usa Value Objects para encapsular titulo, descricao e area.
 @Entity
 @Table(name = "cursos")
 public class Curso {
@@ -26,9 +24,11 @@ public class Curso {
     @Embedded
     private DescricaoCurso descricao;
 
+    // Usada no resgate para achar cursos relacionados.
     @Embedded
     private AreaCurso area;
 
+    // So o JPA usa.
     protected Curso() {
     }
 
@@ -40,7 +40,6 @@ public class Curso {
         this(titulo, descricao, null);
     }
 
-    // Construtor rico: delega validacao dos atributos para os Value Objects.
     public Curso(String titulo, String descricao, String area) {
         this.titulo = new TituloCurso(titulo);
         this.descricao = new DescricaoCurso(descricao);
@@ -55,6 +54,7 @@ public class Curso {
         return titulo.getValor();
     }
 
+    // Curso vindo do banco sem descricao chega com o VO nulo.
     public String getDescricao() {
         return descricao != null ? descricao.getValor() : null;
     }
@@ -63,7 +63,6 @@ public class Curso {
         return area.getValor();
     }
 
-    // Metodos de alteracao controlada do dominio.
     public void alterarTitulo(String titulo) {
         this.titulo = new TituloCurso(titulo);
     }

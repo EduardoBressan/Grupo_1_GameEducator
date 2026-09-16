@@ -12,14 +12,12 @@ import com.example.grupo_1_gameeducator.domain.Resgate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// Integrante: Felipe Rondello A. Lopes
-//
-// BDD: DADO QUE o aluno finalize o curso com media maior que 7,0,
+// BDD do Felipe Rondello A. Lopes:
+// DADO QUE o aluno finalize o curso com media maior que 7,0,
 // QUANDO for resgatar seus 3 cursos,
 // ENTAO tenha a escolha de resgatar 3 entre 10 cursos relacionados ao que concluiu.
 //
-// O segundo teste cobre tambem o BDD do Joao: media exatamente 7,0 nao da direito
-// a cursos adicionais, e portanto nao permite resgate.
+// O segundo teste cobre tambem o BDD do Joao.
 class ResgateDeCursosRelacionadosTest {
 
     @Test
