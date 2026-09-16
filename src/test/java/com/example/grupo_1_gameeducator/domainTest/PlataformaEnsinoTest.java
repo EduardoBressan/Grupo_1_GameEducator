@@ -6,11 +6,11 @@ import com.example.grupo_1_gameeducator.domain.Aluno;
 import com.example.grupo_1_gameeducator.domain.Curso;
 import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
-import com.example.grupo_1_gameeducator.domain.SituacaoMatricula;
+import com.example.grupo_1_gameeducator.domain.StatusMatricula;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// BDD (Luiza Bottesi):
+// BDD (Integrante 3 - Luiza Bottesi):
 // DADO QUE o aluno esta cursando um curso na plataforma,
 // QUANDO ele finalizar o curso com media acima de 7,0,
 // ENTAO ele deve ter direito a realizar mais 3 cursos.
@@ -44,8 +44,8 @@ class PlataformaEnsinoTest {
 
         plataforma.finalizarCurso(matricula, 9.0);
 
-        assertEquals(SituacaoMatricula.CONCLUIDA, matricula.getSituacao());
-        assertEquals(9.0, matricula.getMedia(), 0.0001);
+        assertEquals(StatusMatricula.CONCLUIDO, matricula.getStatus());
+        assertEquals(9.0, matricula.getMediaFinal(), 0.0001);
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.grupo_1_gameeducator.domain.Aluno;
 import com.example.grupo_1_gameeducator.domain.Curso;
+import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
 import com.example.grupo_1_gameeducator.domain.Resgate;
 import org.junit.jupiter.api.DisplayName;
@@ -27,11 +28,12 @@ class ResgateDeCursosRelacionadosTest {
         // Arrange
         PlataformaEnsino plataforma = new PlataformaEnsino();
         Aluno joao = new Aluno("Joao");
-        Curso concluido = new Curso("Logica de Programacao", "Programacao");
-        plataforma.finalizarCurso(plataforma.matricular(joao, concluido), 8.5);
+        Curso concluido = new Curso("Logica de Programacao", "Curso base", "Programacao");
+        Matricula matricula = plataforma.matricular(joao, concluido);
+        plataforma.finalizarCurso(matricula, 8.5);
 
         // Act
-        Resgate resgate = plataforma.iniciarResgate(joao);
+        Resgate resgate = plataforma.iniciarResgate(matricula);
 
         // Assert
         assertEquals(10, resgate.getCursosDisponiveis().size());
@@ -46,10 +48,11 @@ class ResgateDeCursosRelacionadosTest {
         // Arrange
         PlataformaEnsino plataforma = new PlataformaEnsino();
         Aluno maria = new Aluno("Maria");
-        Curso concluido = new Curso("Logica de Programacao", "Programacao");
-        plataforma.finalizarCurso(plataforma.matricular(maria, concluido), 7.0);
+        Curso concluido = new Curso("Logica de Programacao", "Curso base", "Programacao");
+        Matricula matricula = plataforma.matricular(maria, concluido);
+        plataforma.finalizarCurso(matricula, 7.0);
 
         // Act + Assert
-        assertThrows(IllegalStateException.class, () -> plataforma.iniciarResgate(maria));
+        assertThrows(IllegalStateException.class, () -> plataforma.iniciarResgate(matricula));
     }
 }

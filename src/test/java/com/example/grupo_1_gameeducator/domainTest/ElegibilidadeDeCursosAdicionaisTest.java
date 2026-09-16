@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.grupo_1_gameeducator.domain.Aluno;
 import com.example.grupo_1_gameeducator.domain.Curso;
+import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,14 +29,14 @@ class ElegibilidadeDeCursosAdicionaisTest {
     void setUp() {
         plataforma = new PlataformaEnsino();
         aluno = new Aluno("Joao");
-        curso = new Curso("Logica de Programacao", "Programacao");
+        curso = new Curso("Logica de Programacao", "Curso base", "Programacao");
     }
 
     @Test
     @DisplayName("Dado que finalizou com media exatamente 7,0, quando avaliar a elegibilidade, entao o aluno nao fica elegivel")
     void naoDeveFicarElegivelComMediaExatamenteSete() {
         // Arrange
-        var matricula = plataforma.matricular(aluno, curso);
+        Matricula matricula = plataforma.matricular(aluno, curso);
 
         // Act
         plataforma.finalizarCurso(matricula, 7.0);
@@ -49,7 +50,7 @@ class ElegibilidadeDeCursosAdicionaisTest {
     @DisplayName("Dado que finalizou com media acima de 7,0, quando avaliar a elegibilidade, entao o aluno fica elegivel")
     void deveFicarElegivelComMediaAcimaDeSete() {
         // Arrange
-        var matricula = plataforma.matricular(aluno, curso);
+        Matricula matricula = plataforma.matricular(aluno, curso);
 
         // Act
         plataforma.finalizarCurso(matricula, 7.1);

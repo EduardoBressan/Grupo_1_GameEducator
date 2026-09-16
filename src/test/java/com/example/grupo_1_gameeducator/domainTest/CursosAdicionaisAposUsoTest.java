@@ -23,12 +23,14 @@ class CursosAdicionaisAposUsoTest {
         Aluno bruno = new Aluno("Bruno");
 
         plataforma.finalizarCurso(
-                plataforma.matricular(bruno, new Curso("Logica de Programacao", "Programacao")), 7.5);
+                plataforma.matricular(bruno,
+                        new Curso("Logica de Programacao", "Curso base", "Programacao")), 7.5);
         plataforma.usarCursosAdicionais(bruno, 3);
 
         // Act: conclui um novo curso, de novo com media acima de 7,0.
         plataforma.finalizarCurso(
-                plataforma.matricular(bruno, new Curso("Banco de Dados", "Programacao")), 8.0);
+                plataforma.matricular(bruno,
+                        new Curso("Banco de Dados", "Curso de programacao", "Programacao")), 8.0);
 
         // Assert
         assertEquals(3, plataforma.cursosAdicionaisLiberadosPara(bruno));
