@@ -6,83 +6,301 @@
     <title>GameEducator - Vue standalone</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <style>
-        body { font-family: Arial, Helvetica, sans-serif; background: #f4f6f8; padding: 24px; }
-        .box { max-width: 900px; margin: auto; background: #fff; padding: 24px; border-radius: 10px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        input, textarea, button, select { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
-        .destaque { font-weight: bold; color: #1a7f37; }
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --ink: #0b1220;
+            --teal: #0d9488;
+            --teal-dark: #0f766e;
+            --teal-soft: #e3f5f2;
+            --amber: #d97706;
+            --amber-soft: #fdf1de;
+            --red: #dc2626;
+            --red-soft: #fdecec;
+            --text: #171e2c;
+            --text-soft: #5b6472;
+            --text-faint: #96a0ae;
+            --border: #e7e9f0;
+            --font-head: 'Sora', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, Roboto, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 40px 16px 64px;
+            font-family: var(--font-body);
+            background: #f5f6fa;
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        .box { max-width: 900px; margin: 0 auto; }
+
+        .topo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--ink);
+            color: #fff;
+            border-radius: 16px;
+            padding: 22px 26px;
+        }
+
+        .topo .selo {
+            width: 42px; height: 42px; flex: none; border-radius: 11px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            display: grid; place-items: center;
+            font-family: var(--font-head); font-weight: 800; font-size: 15px;
+        }
+
+        .topo h1 { margin: 0; font-family: var(--font-head); font-size: 19px; letter-spacing: -.2px; }
+        .topo p { margin: 3px 0 0; opacity: .75; font-size: 13px; }
+
+        .aviso {
+            margin-top: 18px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border-left: 4px solid var(--red);
+            background: var(--red-soft);
+            color: var(--red);
+            font-size: 13px;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .card h2 { margin: 0 0 16px; font-family: var(--font-head); font-size: 16px; }
+
+        label {
+            display: block; font-size: 11px; font-weight: 700; letter-spacing: .03em;
+            text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;
+        }
+
+        input, textarea {
+            display: block; width: 100%; padding: 10px 12px; margin-bottom: 14px;
+            border: 1.5px solid var(--border); border-radius: 9px;
+            font-family: inherit; font-size: 14px; color: var(--text);
+        }
+
+        input:focus, textarea:focus {
+            outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-soft);
+        }
+
+        textarea { min-height: 70px; resize: vertical; }
+
+        .linha { display: flex; gap: 10px; }
+        .linha > * { flex: 1; }
+
+        button {
+            padding: 10px 16px; border: none; border-radius: 9px;
+            background: var(--teal-dark); color: #fff; font-family: inherit;
+            font-size: 13.5px; font-weight: 600; cursor: pointer;
+        }
+
+        button:hover { background: var(--teal); }
+        button.secundario { background: #fff; color: var(--text); border: 1.5px solid var(--border); }
+        button.secundario:hover { background: #f5f6fa; }
+
+        .lista { list-style: none; margin: 16px 0 0; padding: 0; }
+
+        .lista li {
+            display: flex; align-items: center; gap: 10px; padding: 10px 0;
+            border-top: 1px solid var(--border); font-size: 13.5px;
+        }
+
+        .lista .principal { flex: 1; min-width: 0; }
+        .lista .titulo { font-weight: 600; display: block; }
+        .lista .detalhe { font-size: 12px; color: var(--text-soft); }
+
+        .id {
+            min-width: 26px; padding: 2px 7px; border-radius: 6px; background: #f5f6fa;
+            color: var(--text-faint); font-size: 11px; font-weight: 700; text-align: center;
+            font-family: var(--font-head);
+        }
+
+        .etiqueta { padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: #f5f6fa; color: var(--text-soft); }
+        .etiqueta.area { background: #ede9fe; color: #6d28d9; }
+        .etiqueta.premio { background: var(--amber-soft); color: var(--amber); }
+
+        .vazio {
+            margin: 16px 0 0; padding: 20px 16px; border: 1.5px dashed var(--border);
+            border-radius: 12px; font-size: 13px; color: var(--text-faint); text-align: center;
+        }
+
+        .mensagem {
+            margin-top: 20px; padding: 12px 16px; border-radius: 10px; font-size: 13.5px;
+            border-left: 4px solid var(--teal-dark); background: var(--teal-soft); color: var(--teal-dark);
+        }
+        .mensagem.erro { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+
+        @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 <div id="app" class="box">
-    <h1>GameEducator - Vue.js consumindo a API</h1>
-    <p>Concluir um curso com media acima de 7,0 libera 3 cursos adicionais.</p>
-    <div class="grid">
+
+    <header class="topo">
+        <span class="selo">GE</span>
         <div>
+            <h1>GameEducator — Vue.js consumindo a API</h1>
+            <p>Concluir um curso com média acima de 7,0 libera 3 cursos adicionais.</p>
+        </div>
+    </header>
+
+    <p class="aviso" v-if="semServidor">
+        Esta página foi aberta direto do arquivo. O navegador bloqueia chamadas à API por CORS.
+        Suba a aplicação e acesse <strong>http://localhost:8080</strong> para usar a versão servida pelo Spring.
+    </p>
+
+    <div class="grid">
+        <section class="card">
             <h2>Alunos</h2>
-            <input v-model="aluno.nome" placeholder="Nome">
-            <input v-model="aluno.email" placeholder="E-mail">
-            <button @click="criarAluno">Criar aluno</button>
-            <button @click="listarAlunos">Atualizar alunos</button>
-            <ul>
+
+            <label for="nome">Nome</label>
+            <input id="nome" v-model="aluno.nome" placeholder="Ex.: Maria Souza">
+
+            <label for="email">E-mail</label>
+            <input id="email" v-model="aluno.email" type="email" placeholder="maria@email.com">
+
+            <div class="linha">
+                <button @click="criarAluno">Criar aluno</button>
+                <button class="secundario" @click="listarAlunos">Atualizar</button>
+            </div>
+
+            <ul class="lista" v-if="alunos.length">
                 <li v-for="a in alunos" :key="a.id">
-                    {{ a.id }} - {{ a.nome }} |
-                    <span class="destaque">{{ a.cursosAdicionaisDisponiveis }} adicionais</span>
+                    <span class="id">{{ a.id }}</span>
+                    <span class="principal">
+                        <span class="titulo">{{ a.nome }}</span>
+                        <span class="detalhe">{{ a.email }}</span>
+                    </span>
+                    <span class="etiqueta premio" v-if="a.cursosAdicionaisDisponiveis > 0">
+                        {{ a.cursosAdicionaisDisponiveis }} adicionais
+                    </span>
+                    <span class="etiqueta" v-else>sem saldo</span>
                 </li>
             </ul>
-        </div>
-        <div>
+            <p class="vazio" v-else>Nenhum aluno cadastrado.</p>
+        </section>
+
+        <section class="card">
             <h2>Cursos</h2>
-            <input v-model="curso.titulo" placeholder="Titulo">
-            <textarea v-model="curso.descricao" placeholder="Descricao"></textarea>
-            <button @click="criarCurso">Criar curso</button>
-            <button @click="listarCursos">Atualizar cursos</button>
-            <ul>
-                <li v-for="c in cursos" :key="c.id">{{ c.id }} - {{ c.titulo }}</li>
+
+            <label for="titulo">Título</label>
+            <input id="titulo" v-model="curso.titulo" placeholder="Ex.: Estruturas de Dados">
+
+            <label for="area">Área</label>
+            <input id="area" v-model="curso.area" placeholder="Ex.: Programação">
+
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" v-model="curso.descricao" placeholder="Breve descrição"></textarea>
+
+            <div class="linha">
+                <button @click="criarCurso">Criar curso</button>
+                <button class="secundario" @click="listarCursos">Atualizar</button>
+            </div>
+
+            <ul class="lista" v-if="cursos.length">
+                <li v-for="c in cursos" :key="c.id">
+                    <span class="id">{{ c.id }}</span>
+                    <span class="principal">
+                        <span class="titulo">{{ c.titulo }}</span>
+                        <span class="detalhe">{{ c.descricao || 'sem descrição' }}</span>
+                    </span>
+                    <span class="etiqueta area">{{ c.area }}</span>
+                </li>
             </ul>
-        </div>
+            <p class="vazio" v-else>Nenhum curso cadastrado.</p>
+        </section>
     </div>
-    <p>{{ mensagem }}</p>
+
+    <p class="mensagem" :class="mensagem.tipo" v-if="mensagem.texto">{{ mensagem.texto }}</p>
+
 </div>
+
 <script>
 const { createApp } = Vue;
+
 createApp({
     data() {
         return {
             apiBase: 'http://localhost:8080',
-            mensagem: '',
+            semServidor: window.location.protocol === 'file:',
+            mensagem: { texto: '', tipo: 'ok' },
             alunos: [],
             cursos: [],
             aluno: { nome: '', email: '' },
-            curso: { titulo: '', descricao: '' }
+            curso: { titulo: '', descricao: '', area: '' }
         };
     },
+
     methods: {
         async request(path, options = {}) {
             const response = await fetch(this.apiBase + path, {
                 ...options,
                 headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
             });
+
             const texto = await response.text();
-            if (!response.ok) throw new Error(texto || 'Erro');
+            if (!response.ok) throw new Error(this.extrairErro(texto));
             return texto ? JSON.parse(texto) : null;
         },
-        async listarAlunos() { this.alunos = await this.request('/api/alunos'); },
-        async listarCursos() { this.cursos = await this.request('/api/cursos'); },
-        async criarAluno() {
-            await this.request('/api/alunos', { method: 'POST', body: JSON.stringify(this.aluno) });
-            this.aluno = { nome: '', email: '' };
-            this.mensagem = 'Aluno criado';
-            await this.listarAlunos();
+
+        extrairErro(texto) {
+            try {
+                const corpo = JSON.parse(texto);
+                if (corpo.erro) return corpo.erro;
+                if (corpo.erros) return Object.values(corpo.erros).join(' | ');
+            } catch (e) {
+                // resposta nao era JSON
+            }
+            return texto || 'Erro na requisição';
         },
-        async criarCurso() {
-            await this.request('/api/cursos', { method: 'POST', body: JSON.stringify(this.curso) });
-            this.curso = { titulo: '', descricao: '' };
-            this.mensagem = 'Curso criado';
-            await this.listarCursos();
+
+        async executar(acao, sucesso) {
+            try {
+                await acao();
+                this.mensagem = { texto: sucesso, tipo: 'ok' };
+            } catch (erro) {
+                this.mensagem = { texto: erro.message, tipo: 'erro' };
+            }
+        },
+
+        async listarAlunos() {
+            this.alunos = await this.request('/api/alunos');
+        },
+
+        async listarCursos() {
+            this.cursos = await this.request('/api/cursos');
+        },
+
+        criarAluno() {
+            return this.executar(async () => {
+                await this.request('/api/alunos', { method: 'POST', body: JSON.stringify(this.aluno) });
+                this.aluno = { nome: '', email: '' };
+                await this.listarAlunos();
+            }, 'Aluno criado.');
+        },
+
+        criarCurso() {
+            return this.executar(async () => {
+                await this.request('/api/cursos', { method: 'POST', body: JSON.stringify(this.curso) });
+                this.curso = { titulo: '', descricao: '', area: '' };
+                await this.listarCursos();
+            }, 'Curso criado.');
         }
     },
+
     mounted() {
+        if (this.semServidor) return;
         this.listarAlunos();
         this.listarCursos();
     }
