@@ -10,6 +10,10 @@ public class CursoRequestDTO {
 
     private String descricao;
 
+    // Cenario do Felipe: usada para oferecer cursos relacionados no resgate.
+    // Opcional: se nao informada, o service usa "Geral".
+    private String area;
+
     public CursoRequestDTO() {
     }
 
@@ -27,5 +31,13 @@ public class CursoRequestDTO {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

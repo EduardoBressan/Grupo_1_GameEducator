@@ -25,12 +25,12 @@ public class CursoService {
 
     @Transactional
     public CursoResponseDTO criar(CursoRequestDTO dto) {
-        CursoEntity curso = new CursoEntity(dto.getTitulo(), dto.getDescricao());
+        CursoEntity curso = new CursoEntity(dto.getTitulo(), dto.getDescricao(), dto.getArea());
         return toDTO(repository.save(curso));
     }
 
     // Mapeamento manual entidade -> DTO.
     private CursoResponseDTO toDTO(CursoEntity curso) {
-        return new CursoResponseDTO(curso.getId(), curso.getTitulo(), curso.getDescricao());
+        return new CursoResponseDTO(curso.getId(), curso.getTitulo(), curso.getDescricao(), curso.getArea());
     }
 }

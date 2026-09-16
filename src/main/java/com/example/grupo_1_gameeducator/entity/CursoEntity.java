@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 @Table(name = "cursos")
 public class CursoEntity {
 
+    private static final String AREA_PADRAO = "Geral";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,12 +24,21 @@ public class CursoEntity {
     @Column(length = 500)
     private String descricao;
 
+    // Cenario do Felipe: cursos relacionados no resgate sao da mesma area.
+    @Column(nullable = false)
+    private String area;
+
     protected CursoEntity() {
     }
 
-    public CursoEntity(String titulo, String descricao) {
+    public CursoEntity(String titulo, String descricao, String area) {
         this.titulo = titulo;
         this.descricao = descricao;
+        this.area = (area == null || area.isBlank()) ? AREA_PADRAO : area;
+    }
+
+    public CursoEntity(String titulo, String descricao) {
+        this(titulo, descricao, AREA_PADRAO);
     }
 
     public Long getId() {
@@ -40,6 +51,10 @@ public class CursoEntity {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public String getArea() {
+        return area;
     }
 
     public void alterarTitulo(String titulo) {

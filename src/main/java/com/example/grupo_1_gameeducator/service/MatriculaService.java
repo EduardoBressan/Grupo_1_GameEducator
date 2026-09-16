@@ -1,13 +1,13 @@
 package com.example.grupo_1_gameeducator.service;
 
-import com.example.grupo_1_gameeducator.domain.Aluno;
-import com.example.grupo_1_gameeducator.domain.Curso;
-import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
+import com.example.grupo_1_gameeducator.dto.CursoResponseDTO;
 import com.example.grupo_1_gameeducator.dto.MatriculaResponseDTO;
+import com.example.grupo_1_gameeducator.dto.ResgateResponseDTO;
 import com.example.grupo_1_gameeducator.entity.AlunoEntity;
 import com.example.grupo_1_gameeducator.entity.CursoEntity;
 import com.example.grupo_1_gameeducator.entity.MatriculaEntity;
+import com.example.grupo_1_gameeducator.entity.StatusMatricula;
 import com.example.grupo_1_gameeducator.repository.CursoRepository;
 import com.example.grupo_1_gameeducator.repository.MatriculaRepository;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 // Camada: SERVICE.
-// Este service e o ponto onde a aplicacao web encontra a regra de negocio
-// construida por TDD: quem decide quantos cursos adicionais a conclusao libera
-// e a classe de dominio PlataformaEnsino, nao este service.
+// Este service e o ponto onde a aplicacao web encontra as regras de negocio
+// construidas por TDD na classe de dominio PlataformaEnsino. A regra em si
+// (quem aprova cursos adicionais, quantos cursos relacionados oferecer) e
+// sempre a mesma testada em domainTest - este service so traduz entidades
+// persistidas para ela e devolve o resultado como DTO.
 @Service
 public class MatriculaService {
 
     private final MatriculaRepository matriculaRepository;
     private final CursoRepository cursoRepository;
     private final AlunoService alunoService;
-
-    // A regra de dominio nao guarda estado entre requisicoes.
-    private final PlataformaEnsino plataformaEnsino = new PlataformaEnsino();
 
     public MatriculaService(MatriculaRepository matriculaRepository,
                             CursoRepository cursoRepository,
@@ -63,27 +62,54 @@ public class MatriculaService {
 
         matricula.concluirCom(mediaFinal);
 
-        // A decisao e do dominio testado por TDD.
-        int liberados = calcularCursosAdicionaisLiberados(matricula.getAluno(), matricula.getCurso(), mediaFinal);
+        // A decisao e a mesma regra testada por TDD em PlataformaEnsino: media
+        // ACIMA de 7,0 concede 3 cursos adicionais - mesmo que o aluno ja tenha
+        // usado os anteriores (cenario do Eduardo: o saldo e cumulativo, nao
+        // trava em zero).
+        int liberados = calcularCursosAdicionaisLiberados(mediaFinal);
         matricula.getAluno().liberarCursosAdicionais(liberados);
 
         return toDTO(matriculaRepository.save(matricula));
     }
 
-    // Traduz as entidades persistidas para os objetos de dominio e pergunta ao
-    // PlataformaEnsino quantos cursos adicionais aquela media libera.
-    private int calcularCursosAdicionaisLiberados(AlunoEntity alunoEntity, CursoEntity cursoEntity, Double mediaFinal) {
+    // Cenario do Felipe: ao resgatar, o aluno recebe ate 10 cursos da mesma
+    // area do que concluiu (exceto ele mesmo) e pode escolher 3 - a mesma
+    // regra de PlataformaEnsino.iniciarResgate, aplicada aqui sobre o catalogo
+    // real de cursos cadastrados no banco.
+    public ResgateResponseDTO iniciarResgate(Long matriculaId) {
+        MatriculaEntity matricula = matriculaRepository.findById(matriculaId)
+                .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
+
+        if (matricula.getStatus() != StatusMatricula.CONCLUIDO) {
+            throw new IllegalStateException("Matricula ainda nao foi concluida.");
+        }
+
+        AlunoEntity aluno = matricula.getAluno();
+        if (aluno.getCursosAdicionaisDisponiveis() <= 0) {
+            throw new IllegalStateException("Aluno nao tem cursos adicionais para resgatar.");
+        }
+
+        CursoEntity cursoConcluido = matricula.getCurso();
+
+        List<CursoResponseDTO> relacionados = cursoRepository
+                .findByAreaAndIdNot(cursoConcluido.getArea(), cursoConcluido.getId())
+                .stream()
+                .limit(PlataformaEnsino.CURSOS_RELACIONADOS_OFERECIDOS)
+                .map(this::toCursoDTO)
+                .toList();
+
+        return new ResgateResponseDTO(relacionados, PlataformaEnsino.CURSOS_ADICIONAIS_POR_APROVACAO);
+    }
+
+    // A regra em si (media ACIMA de 7,0) e a mesma testada em
+    // PlataformaEnsinoTest / ElegibilidadeDeCursosAdicionaisTest.
+    private int calcularCursosAdicionaisLiberados(Double mediaFinal) {
         if (mediaFinal == null) {
             return 0;
         }
-
-        Aluno aluno = new Aluno(alunoEntity.getNome());
-        Curso curso = new Curso(cursoEntity.getTitulo());
-
-        Matricula matriculaDominio = plataformaEnsino.matricular(aluno, curso);
-        plataformaEnsino.finalizarCurso(matriculaDominio, mediaFinal);
-
-        return Math.max(plataformaEnsino.cursosAdicionaisLiberadosPara(aluno), 0);
+        return PlataformaEnsino.aprovadoParaCursosAdicionais(mediaFinal)
+                ? PlataformaEnsino.CURSOS_ADICIONAIS_POR_APROVACAO
+                : 0;
     }
 
     // Mapeamento manual entidade -> DTO.
@@ -98,8 +124,12 @@ public class MatriculaService {
                 matricula.getStatus().name(),
                 matricula.getMediaFinal(),
                 matricula.isCursoAdicional(),
-                calcularCursosAdicionaisLiberados(aluno, matricula.getCurso(), matricula.getMediaFinal()),
+                calcularCursosAdicionaisLiberados(matricula.getMediaFinal()),
                 aluno.getCursosAdicionaisDisponiveis()
         );
+    }
+
+    private CursoResponseDTO toCursoDTO(CursoEntity curso) {
+        return new CursoResponseDTO(curso.getId(), curso.getTitulo(), curso.getDescricao(), curso.getArea());
     }
 }
