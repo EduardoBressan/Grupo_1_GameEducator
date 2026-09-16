@@ -13,7 +13,7 @@ import java.util.Map;
 //
 // Esta classe concentra os quatro cenarios BDD escritos pelo grupo:
 //  - Luiza Bottesi: media acima de 7,0 libera 3 cursos adicionais
-//  - Joao: media exatamente 7,0 nao libera nada
+//  - Joao: media exatamente 7,0 nao torna o aluno elegivel
 //  - Eduardo Bressan: depois de usar os 3, uma nova aprovacao concede mais 3
 //  - Felipe Rondello: no resgate, o aluno escolhe 3 entre 10 cursos relacionados
 public class PlataformaEnsino {
@@ -58,6 +58,18 @@ public class PlataformaEnsino {
         return cursosAdicionaisPorAluno.getOrDefault(aluno, 0);
     }
 
+    // Cenario do Joao: a regra da media vira uma consulta publica, para poder ser
+    // verificada sem precisar concluir uma matricula.
+    // A media precisa ser ACIMA de 7,0. Exatamente 7,0 nao libera nada.
+    public static boolean aprovadoParaCursosAdicionais(double media) {
+        return media > MEDIA_MINIMA;
+    }
+
+    // Cenario do Joao: o aluno so fica elegivel enquanto tiver saldo de cursos adicionais.
+    public boolean estaElegivelParaCursosAdicionais(Aluno aluno) {
+        return cursosAdicionaisLiberadosPara(aluno) > 0;
+    }
+
     // Cenario do Eduardo: o aluno gasta os cursos adicionais que conquistou.
     // Zerar o saldo aqui e o que permite provar que uma nova aprovacao concede mais 3.
     public void usarCursosAdicionais(Aluno aluno, int quantidade) {
@@ -76,7 +88,7 @@ public class PlataformaEnsino {
     // Cenario do Felipe: ao resgatar, o aluno recebe 10 cursos da mesma area do
     // que concluiu e pode escolher 3 deles.
     public Resgate iniciarResgate(Aluno aluno) {
-        if (cursosAdicionaisLiberadosPara(aluno) <= 0) {
+        if (!estaElegivelParaCursosAdicionais(aluno)) {
             throw new IllegalStateException("Aluno nao tem cursos adicionais para resgatar.");
         }
 
@@ -89,11 +101,6 @@ public class PlataformaEnsino {
                 .toList();
 
         return new Resgate(relacionados, CURSOS_ADICIONAIS_POR_APROVACAO);
-    }
-
-    // A media precisa ser ACIMA de 7,0. Exatamente 7,0 nao libera nada.
-    private boolean aprovadoParaCursosAdicionais(double media) {
-        return media > MEDIA_MINIMA;
     }
 
     private static List<Curso> catalogoPadrao() {
