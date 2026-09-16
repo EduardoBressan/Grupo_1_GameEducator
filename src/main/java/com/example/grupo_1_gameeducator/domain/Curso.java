@@ -1,28 +1,73 @@
 package com.example.grupo_1_gameeducator.domain;
 
-// Camada: DOMINIO (TDD).
-// A area do curso e usada para oferecer cursos relacionados no resgate.
+import com.example.grupo_1_gameeducator.domain.vo.AreaCurso;
+import com.example.grupo_1_gameeducator.domain.vo.DescricaoCurso;
+import com.example.grupo_1_gameeducator.domain.vo.TituloCurso;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "cursos")
 public class Curso {
 
-    private static final String AREA_PADRAO = "Geral";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final String nome;
-    private final String area;
+    @Embedded
+    private TituloCurso titulo;
 
-    public Curso(String nome, String area) {
-        this.nome = nome;
-        this.area = area;
+    @Embedded
+    private DescricaoCurso descricao;
+
+    // Usada no resgate para achar cursos relacionados.
+    @Embedded
+    private AreaCurso area;
+
+    // So o JPA usa.
+    protected Curso() {
     }
 
-    public Curso(String nome) {
-        this(nome, AREA_PADRAO);
+    public Curso(String titulo) {
+        this(titulo, null, null);
     }
 
-    public String getNome() {
-        return nome;
+    public Curso(String titulo, String descricao) {
+        this(titulo, descricao, null);
+    }
+
+    public Curso(String titulo, String descricao, String area) {
+        this.titulo = new TituloCurso(titulo);
+        this.descricao = new DescricaoCurso(descricao);
+        this.area = new AreaCurso(area);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitulo() {
+        return titulo.getValor();
+    }
+
+    // Curso vindo do banco sem descricao chega com o VO nulo.
+    public String getDescricao() {
+        return descricao != null ? descricao.getValor() : null;
     }
 
     public String getArea() {
-        return area;
+        return area.getValor();
+    }
+
+    public void alterarTitulo(String titulo) {
+        this.titulo = new TituloCurso(titulo);
+    }
+
+    public void alterarDescricao(String descricao) {
+        this.descricao = new DescricaoCurso(descricao);
     }
 }

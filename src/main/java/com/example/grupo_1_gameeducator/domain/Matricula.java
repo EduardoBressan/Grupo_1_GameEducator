@@ -1,18 +1,61 @@
 package com.example.grupo_1_gameeducator.domain;
 
-// Camada: DOMINIO (TDD).
-// Guarda o vinculo aluno-curso e o resultado obtido.
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "matriculas")
 public class Matricula {
 
-    private final Aluno aluno;
-    private final Curso curso;
-    private SituacaoMatricula situacao;
-    private double media;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "aluno_id")
+    private Aluno aluno;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusMatricula status;
+
+    @Column
+    private Double mediaFinal;
+
+    // true = o aluno esta usando um dos cursos adicionais que conquistou.
+    @Column(nullable = false)
+    private boolean cursoAdicional;
+
+    // So o JPA usa.
+    protected Matricula() {
+    }
 
     public Matricula(Aluno aluno, Curso curso) {
+        this(aluno, curso, false);
+    }
+
+    public Matricula(Aluno aluno, Curso curso, boolean cursoAdicional) {
         this.aluno = aluno;
         this.curso = curso;
-        this.situacao = SituacaoMatricula.EM_ANDAMENTO;
+        this.cursoAdicional = cursoAdicional;
+        this.status = StatusMatricula.EM_ANDAMENTO;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Aluno getAluno() {
@@ -23,16 +66,20 @@ public class Matricula {
         return curso;
     }
 
-    public SituacaoMatricula getSituacao() {
-        return situacao;
+    public StatusMatricula getStatus() {
+        return status;
     }
 
-    public double getMedia() {
-        return media;
+    public Double getMediaFinal() {
+        return mediaFinal;
     }
 
-    public void registrarResultado(double media, SituacaoMatricula situacao) {
-        this.media = media;
-        this.situacao = situacao;
+    public boolean isCursoAdicional() {
+        return cursoAdicional;
+    }
+
+    public void concluirCom(Double mediaFinal) {
+        this.status = StatusMatricula.CONCLUIDO;
+        this.mediaFinal = mediaFinal;
     }
 }

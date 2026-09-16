@@ -6,14 +6,16 @@ public class CursoResponseDTO {
     private Long id;
     private String titulo;
     private String descricao;
+    private String area;
 
     public CursoResponseDTO() {
     }
 
-    public CursoResponseDTO(Long id, String titulo, String descricao) {
+    public CursoResponseDTO(Long id, String titulo, String descricao, String area) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
+        this.area = area;
     }
 
     public Long getId() {
@@ -26,5 +28,9 @@ public class CursoResponseDTO {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public String getArea() {
+        return area;
     }
 }

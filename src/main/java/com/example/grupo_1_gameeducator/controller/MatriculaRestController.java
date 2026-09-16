@@ -3,6 +3,7 @@ package com.example.grupo_1_gameeducator.controller;
 import com.example.grupo_1_gameeducator.dto.ConcluirMatriculaRequestDTO;
 import com.example.grupo_1_gameeducator.dto.MatriculaRequestDTO;
 import com.example.grupo_1_gameeducator.dto.MatriculaResponseDTO;
+import com.example.grupo_1_gameeducator.dto.ResgateResponseDTO;
 import com.example.grupo_1_gameeducator.service.MatriculaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-// Camada: CONTROLLER.
-// O endpoint de concluir matricula e o que exercita, via HTTP, a regra
-// de negocio construida por TDD (liberar 3 cursos com media acima de 7,0).
 @RestController
 @RequestMapping("/api/matriculas")
 @Tag(name = "Matriculas")
@@ -45,6 +43,12 @@ public class MatriculaRestController {
     public MatriculaResponseDTO concluir(@PathVariable Long id,
                                          @Valid @RequestBody ConcluirMatriculaRequestDTO dto) {
         return service.concluir(id, dto.getMediaFinal());
+    }
+
+    @GetMapping("/{id}/resgate")
+    @Operation(summary = "Resgatar cursos relacionados ao curso concluido (escolher 3 entre ate 10)")
+    public ResgateResponseDTO resgatar(@PathVariable Long id) {
+        return service.iniciarResgate(id);
     }
 
     @GetMapping("/aluno/{alunoId}")

@@ -75,14 +75,14 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
                 <configuration>
-                    <!-- Fora da medicao: classes sem regra de negocio.
-                         DTOs sao apenas transporte de dados, config e a classe
-                         main apenas sobem a aplicacao. -->
-                    <excludes>
-                        <exclude>**/dto/**</exclude>
-                        <exclude>**/config/**</exclude>
-                        <exclude>**/Grupo1GameEducatorApplication.class</exclude>
-                    </excludes>
+                    <!-- A AC1 pede o ciclo RED/GREEN/BLUE com cobertura de 100%
+                         no pacote de dominio construido por TDD. A medicao fica
+                         restrita a ele: as demais camadas (service, controller,
+                         repository, dto, config) sao infraestrutura da aplicacao
+                         e nao fazem parte do exercicio de TDD. -->
+                    <includes>
+                        <include>com/example/grupo_1_gameeducator/domain/**</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
