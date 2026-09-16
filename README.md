@@ -7,9 +7,9 @@ Projeto da AC1 de DevOps e QA. Aplicação Spring Boot para gestão de alunos, c
 | Integrante | E-mail / GitHub |
 |---|---|
 | Luiza Bottesi | luizabottesi3@gmail.com |
-| Eduardo Bressan Paixão | — |
-| João | — |
-| Felipe Rondello A. Lopes | — |
+| Eduardo Bressan Paixão | eduardopaixao160@gmail.com |
+| João | joaoguifl350@gmail.com |
+| Felipe Rondello A. Lopes | ferondellodev@gmail.com |
 
 ## Descrição do case
 
