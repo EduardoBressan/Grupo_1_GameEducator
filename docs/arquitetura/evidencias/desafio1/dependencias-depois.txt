@@ -1,0 +1,24 @@
+Imports entre classes de pacotes diferentes: 45
+Dependencias entre pacotes: 10
+  conquistas -> domain
+  conquistas -> repository
+  controller -> dto
+  controller -> service
+  domain -> domain.vo
+  repository -> domain
+  service -> conquistas
+  service -> domain
+  service -> dto
+  service -> repository
+
+MatriculaService: 10 imports do projeto, 0 referencias a regra de gamificacao
+  conquistas.ConquistasApi
+  domain.Aluno
+  domain.Curso
+  domain.Matricula
+  domain.Resgate
+  dto.CursoResponseDTO
+  dto.MatriculaResponseDTO
+  dto.ResgateResponseDTO
+  repository.CursoRepository
+  repository.MatriculaRepository
