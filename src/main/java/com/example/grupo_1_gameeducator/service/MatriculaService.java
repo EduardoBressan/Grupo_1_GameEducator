@@ -1,10 +1,10 @@
 package com.example.grupo_1_gameeducator.service;
 
+import com.example.grupo_1_gameeducator.conquistas.ConquistasApi;
 import com.example.grupo_1_gameeducator.domain.Aluno;
 import com.example.grupo_1_gameeducator.domain.Curso;
 import com.example.grupo_1_gameeducator.domain.Matricula;
-import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
-import com.example.grupo_1_gameeducator.domain.StatusMatricula;
+import com.example.grupo_1_gameeducator.domain.Resgate;
 import com.example.grupo_1_gameeducator.dto.CursoResponseDTO;
 import com.example.grupo_1_gameeducator.dto.MatriculaResponseDTO;
 import com.example.grupo_1_gameeducator.dto.ResgateResponseDTO;
@@ -15,20 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-// Quem decide as regras e o PlataformaEnsino, do pacote domain.
+// As regras de gamificacao ficam no modulo Conquistas (ADR-001);
+// aqui so se usa o contrato ConquistasApi.
 @Service
 public class MatriculaService {
 
     private final MatriculaRepository matriculaRepository;
     private final CursoRepository cursoRepository;
     private final AlunoService alunoService;
+    private final ConquistasApi conquistas;
 
     public MatriculaService(MatriculaRepository matriculaRepository,
                             CursoRepository cursoRepository,
-                            AlunoService alunoService) {
+                            AlunoService alunoService,
+                            ConquistasApi conquistas) {
         this.matriculaRepository = matriculaRepository;
         this.cursoRepository = cursoRepository;
         this.alunoService = alunoService;
+        this.conquistas = conquistas;
     }
 
     public List<MatriculaResponseDTO> listarPorAluno(Long alunoId) {
@@ -54,8 +58,7 @@ public class MatriculaService {
         Matricula matricula = matriculaRepository.findById(matriculaId)
                 .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
 
-        matricula.concluirCom(mediaFinal);
-        matricula.getAluno().liberarCursosAdicionais(calcularCursosAdicionaisLiberados(mediaFinal));
+        conquistas.concluirCurso(matricula, mediaFinal);
 
         return toDTO(matriculaRepository.save(matricula));
     }
@@ -65,34 +68,13 @@ public class MatriculaService {
         Matricula matricula = matriculaRepository.findById(matriculaId)
                 .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
 
-        if (matricula.getStatus() != StatusMatricula.CONCLUIDO) {
-            throw new IllegalStateException("Matricula ainda nao foi concluida.");
-        }
+        Resgate resgate = conquistas.iniciarResgate(matricula);
 
-        Aluno aluno = matricula.getAluno();
-        if (aluno.getCursosAdicionaisDisponiveis() <= 0) {
-            throw new IllegalStateException("Aluno nao tem cursos adicionais para resgatar.");
-        }
-
-        Curso cursoConcluido = matricula.getCurso();
-
-        List<CursoResponseDTO> relacionados = cursoRepository
-                .findByArea_ValorAndIdNot(cursoConcluido.getArea(), cursoConcluido.getId())
-                .stream()
-                .limit(PlataformaEnsino.CURSOS_RELACIONADOS_OFERECIDOS)
+        List<CursoResponseDTO> relacionados = resgate.getCursosDisponiveis().stream()
                 .map(this::toCursoDTO)
                 .toList();
 
-        return new ResgateResponseDTO(relacionados, PlataformaEnsino.CURSOS_ADICIONAIS_POR_APROVACAO);
-    }
-
-    private int calcularCursosAdicionaisLiberados(Double mediaFinal) {
-        if (mediaFinal == null) {
-            return 0;
-        }
-        return PlataformaEnsino.aprovadoParaCursosAdicionais(mediaFinal)
-                ? PlataformaEnsino.CURSOS_ADICIONAIS_POR_APROVACAO
-                : 0;
+        return new ResgateResponseDTO(relacionados, resgate.getLimiteDeEscolhas());
     }
 
     private MatriculaResponseDTO toDTO(Matricula matricula) {
@@ -106,7 +88,7 @@ public class MatriculaService {
                 matricula.getStatus().name(),
                 matricula.getMediaFinal(),
                 matricula.isCursoAdicional(),
-                calcularCursosAdicionaisLiberados(matricula.getMediaFinal()),
+                conquistas.cursosAdicionaisLiberadosPor(matricula.getMediaFinal()),
                 aluno.getCursosAdicionaisDisponiveis()
         );
     }
