@@ -53,8 +53,24 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gameeducator_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      # Desafio 3 (ADR-003): servico de IA. Sem depends_on de proposito:
+      # o Core sobe e funciona mesmo com a IA fora do ar.
+      IA_BASE_URL: http://ia:8000
+      IA_TIMEOUT_MS: "2000"
     ports:
       - "8080:8080"
+    networks:
+      - app_net
+
+  # Desafio 3 (ADR-003): servico Python de IA (FastAPI), container proprio.
+  ia:
+    build: ./labs/desafio3-ia-fastapi
+    container_name: gameeducator-ia
+    restart: "no"
+    environment:
+      IA_ATRASO_SEGUNDOS: "0"
+    ports:
+      - "8000:8000"
     networks:
       - app_net
 

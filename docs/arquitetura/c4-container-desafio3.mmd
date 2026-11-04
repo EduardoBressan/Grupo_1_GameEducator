@@ -1,0 +1,28 @@
+%% C4 Container do GameEducator - estado apos o ADR-003 (Desafio 3)
+flowchart TB
+    aluno(["<b>Aluno</b><br/>[Pessoa]"])
+    front["<b>Front web</b><br/>[Container: HTML/CSS/JS estático]<br/>Telas de alunos, cursos e matrículas"]
+
+    subgraph plataforma["GameEducator — [Sistema]"]
+        core["<b>Core GameEducator</b><br/>[Container: Java 21 / Spring Boot 3.5]<br/>Monólito Modular (ADR-001) com Ports &amp; Adapters (ADR-002)<br/>Matrícula, conclusão, conquistas e resgate"]
+        db[("<b>Banco relacional</b><br/>[Container: PostgreSQL 16]<br/>alunos, cursos, matrículas")]
+        ia["<b>Serviço de IA</b><br/>[Container: Python 3.12 / FastAPI]<br/>Recomendação (ML) — implementado<br/>Assistente RAG — planejado, mesmo container"]
+    end
+
+    llm["<b>Provedor de LLM</b><br/>[Sistema externo — planejado]<br/>usado só pelo assistente RAG"]
+
+    aluno -->|"usa"| front
+    front -->|"JSON / HTTP"| core
+    core -->|"JPA / JDBC"| db
+    core -->|"GET /recomendacoes/{id}<br/>JSON / HTTP, timeout 2 s<br/>se falhar: resposta degradada"| ia
+    ia -.->|"HTTPS (planejado)"| llm
+
+    classDef pessoa fill:#08427B,stroke:#052E56,color:#fff
+    classDef container fill:#438DD5,stroke:#2E6295,color:#fff
+    classDef novo fill:#2E7D32,stroke:#1B5E20,color:#fff
+    classDef externo fill:#fff,stroke:#999,color:#555,stroke-dasharray: 5 5
+    class aluno pessoa
+    class front,core,db container
+    class ia novo
+    class llm externo
+    style plataforma fill:#F7FBFF,stroke:#438DD5,stroke-width:2px
