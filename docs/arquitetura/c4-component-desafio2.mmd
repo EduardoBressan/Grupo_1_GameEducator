@@ -1,0 +1,48 @@
+%% C4 Component do Core GameEducator - estado apos o ADR-002 (Desafio 2)
+flowchart TB
+    front["<b>Front web</b><br/>[Container: HTML/CSS/JS estático]<br/>Telas de alunos, cursos e matrículas"]
+    db[("<b>Banco relacional</b><br/>[Container: PostgreSQL 16 / H2]<br/>alunos, cursos, matrículas")]
+
+    subgraph core["Core GameEducator — [Container: Java 21 / Spring Boot 3.5]"]
+        ctrl["<b>Controllers REST</b><br/>[Component: Spring MVC + Swagger]<br/>Adapter de entrada HTTP"]
+        svc["<b>Serviços de aplicação</b><br/>[Component: AlunoService, CursoService, MatriculaService]<br/>Orquestram cadastro e matrícula"]
+
+        subgraph conq["Módulo Conquistas — Ports &amp; Adapters"]
+            api["<b>ConquistasApi</b><br/>[Porta de entrada]<br/>concluir curso, iniciar resgate"]
+            uc["<b>ConquistasService</b><br/>[Caso de uso, package-private]<br/>sem import de JPA nem de repositório"]
+            porta["<b>CatalogoDeCursos</b><br/>[Porta de saída]<br/>cursos relacionados ao concluído"]
+            jpaAd["<b>CatalogoDeCursosJpa</b><br/>[Adapter de saída]<br/>único ponto que usa o repositório"]
+        end
+
+        dom["<b>Domínio</b><br/>[Component: PlataformaEnsino, Aluno, Curso, Matricula, Resgate, VOs]<br/>Regras de gamificação construídas por TDD na AC1"]
+        repos["<b>Repositórios</b><br/>[Component: Spring Data JPA]<br/>CursoRepository, MatriculaRepository, AlunoRepository"]
+        rank["<b>Módulo Ranking</b><br/>[Planejado: RankingApi + porta de leitura]<br/>mesmo padrão quando o RF01 for implementado"]
+    end
+
+    fake["<b>CatalogoDeCursosEmMemoria</b><br/>[Adapter fake, só em src/test]<br/>troca o JPA nos testes do módulo"]
+
+    front -->|"JSON / HTTP"| ctrl
+    ctrl -->|"chama"| svc
+    svc -->|"usa só o contrato"| api
+    api -.->|"implementada por"| uc
+    uc -->|"aplica as regras"| dom
+    uc -->|"pede cursos da mesma área"| porta
+    porta -.->|"implementada por"| jpaAd
+    porta -.->|"implementada por (testes)"| fake
+    jpaAd -->|"findByArea_ValorAndIdNot"| repos
+    svc -->|"lê e grava matrículas"| repos
+    repos -->|"JPA / JDBC"| db
+    rank -.->|"usará"| dom
+
+    classDef container fill:#438DD5,stroke:#2E6295,color:#fff
+    classDef component fill:#85BBF0,stroke:#5D82A8,color:#000
+    classDef porta fill:#FFF4C2,stroke:#B39500,color:#000
+    classDef planejado fill:#fff,stroke:#5D82A8,color:#555,stroke-dasharray: 5 5
+    classDef teste fill:#EEEEEE,stroke:#999,color:#333,stroke-dasharray: 5 5
+    class front,db container
+    class ctrl,svc,uc,dom,repos,jpaAd component
+    class api,porta porta
+    class rank planejado
+    class fake teste
+    style core fill:#F7FBFF,stroke:#438DD5,stroke-width:2px
+    style conq fill:#FFFBEA,stroke:#B39500,stroke-width:1px

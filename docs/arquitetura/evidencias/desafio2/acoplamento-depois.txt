@@ -1,0 +1,19 @@
+Nucleo do modulo Conquistas (pacote conquistas): 3 classes
+  imports de repositorio JPA do projeto: 0
+  imports de Spring Data: 0
+  imports de JPA (jakarta.persistence): 0
+
+Adapters do modulo (conquistas.adapter.*): 1 classes
+  imports de repositorio JPA do projeto: 1 (CatalogoDeCursosJpa)
+  imports de Spring Data: 0
+  imports de JPA (jakarta.persistence): 0
+
+Dominio (domain e domain.vo): 11 classes
+  imports de repositorio JPA do projeto: 0
+  imports de Spring Data: 0
+  imports de JPA (jakarta.persistence): 34 (Aluno, Curso, Matricula, AreaCurso, DescricaoCurso, EmailAluno, NomeAluno, TituloCurso)
+
+Classes do nucleo do modulo e o que recebem de infraestrutura:
+  CatalogoDeCursos: nenhum
+  ConquistasApi: nenhum
+  ConquistasService: nenhum
