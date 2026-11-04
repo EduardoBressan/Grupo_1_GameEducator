@@ -1,0 +1,6 @@
+tests/test_api.py::test_health_responde_ok PASSED                        [ 20%]
+tests/test_api.py::test_recomenda_tres_cursos_por_padrao_no_contrato_esperado_pelo_core PASSED [ 40%]
+tests/test_api.py::test_recomendacao_e_estavel_para_o_mesmo_aluno PASSED [ 60%]
+tests/test_api.py::test_respeita_o_limite_pedido PASSED                  [ 80%]
+tests/test_api.py::test_rejeita_limite_fora_da_faixa PASSED              [100%]
+========================= 5 passed, 1 warning in 0.24s =========================

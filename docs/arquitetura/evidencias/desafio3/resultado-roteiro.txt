@@ -1,0 +1,25 @@
+﻿Desafio 3 - roteiro de falha da IA (2026-11-03T21:23:31)
+
+== Passo 1: subir Core + PostgreSQL + IA
+app: running
+ia: running
+pgadmin: running
+postgres: running
+
+Aluno criado: id=1; curso criado: id=1
+
+== Passo 2: IA no ar
+[IA no ar] GET /recomendacoes -> origem=IA, cursos=3, tempo=365 ms
+
+== Passo 3: derrubar a IA (docker compose stop ia)
+[IA fora do ar] GET /recomendacoes -> origem=INDISPONIVEL, cursos=0, tempo=2014 ms
+[IA fora do ar] POST /matriculas -> status=EM_ANDAMENTO, tempo=97 ms
+[IA fora do ar] PUT /concluir -> status=CONCLUIDO, cursosAdicionaisDisponiveis=3, tempo=116 ms
+
+== Passo 4: religar a IA (docker compose start ia)
+[IA religada] GET /recomendacoes -> origem=IA, cursos=3, tempo=39 ms
+
+== Logs do Core sobre a IA
+gameeducator-api  | 2026-11-04T00:28:06.994Z  WARN 1 --- [Grupo_1_GameEducator] [nio-8080-exec-5] c.e.g.r.RecomendacoesService             : Servico de IA indisponivel; respondendo sem recomendacoes (aluno 1): Servico de IA nao respondeu: I/O error on GET request for "http://ia:8000/recomendacoes/1": Connect timed out
+
+Fim. Resultado salvo em docs/arquitetura/evidencias/desafio3/resultado-roteiro.txt
