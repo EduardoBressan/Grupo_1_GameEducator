@@ -6,6 +6,7 @@ import com.example.grupo_1_gameeducator.domain.Resgate;
 // Desafio 1 (ADR-001): contrato publico do modulo Conquistas.
 // O resto do Core so conhece esta interface; a regra de gamificacao
 // (media acima de 7,0 libera +3 cursos, resgate de 3 entre 10) fica dentro do modulo.
+// Desafio 2 (ADR-002): e a porta de entrada do modulo (quem chama: MatriculaService).
 public interface ConquistasApi {
 
     // Conclui a matricula e libera os cursos adicionais, se o aluno tiver direito.

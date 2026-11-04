@@ -2,38 +2,33 @@ package com.example.grupo_1_gameeducator.conquistas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+import com.example.grupo_1_gameeducator.conquistas.adapter.memoria.CatalogoDeCursosEmMemoria;
 import com.example.grupo_1_gameeducator.domain.Aluno;
 import com.example.grupo_1_gameeducator.domain.Curso;
 import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.Resgate;
-import com.example.grupo_1_gameeducator.repository.CursoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // Desafio 1 (ADR-001): o modulo Conquistas aplica as mesmas regras do dominio da AC1.
-// O banco e substituido por um mock, entao o teste nao sobe Spring nem H2.
+// Desafio 2 (ADR-002): o caso de uso roda com o adapter em memoria no lugar do JPA,
+// entao o teste nao sobe Spring, nao usa banco e nao precisa mais de mock do repositorio.
 class ConquistasServiceTest {
 
-    private CursoRepository cursoRepository;
+    private CatalogoDeCursosEmMemoria catalogo;
     private ConquistasService conquistas;
     private Aluno aluno;
     private Curso cursoConcluido;
 
     @BeforeEach
     void setUp() {
-        cursoRepository = mock(CursoRepository.class);
-        conquistas = new ConquistasService(cursoRepository);
+        catalogo = new CatalogoDeCursosEmMemoria();
+        conquistas = new ConquistasService(catalogo);
         aluno = new Aluno("Ana");
         cursoConcluido = new Curso("Logica de Programacao", "Curso base", "Programacao");
+        catalogo.adicionar(cursoConcluido);
     }
 
     @Test
@@ -68,11 +63,10 @@ class ConquistasServiceTest {
     @Test
     @DisplayName("Resgate oferece no maximo 10 cursos da mesma area para escolher 3")
     void resgateOfereceDezCursosParaEscolherTres() {
-        List<Curso> mesmaArea = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
-            mesmaArea.add(new Curso("Curso " + i, "Curso de programacao", "Programacao"));
+            catalogo.adicionar(new Curso("Curso " + i, "Curso de programacao", "Programacao"));
         }
-        when(cursoRepository.findByArea_ValorAndIdNot(eq("Programacao"), any())).thenReturn(mesmaArea);
+        catalogo.adicionar(new Curso("Fundamentos de Design", "Curso de design", "Design"));
 
         Matricula matricula = new Matricula(aluno, cursoConcluido);
         conquistas.concluirCurso(matricula, 8.5);

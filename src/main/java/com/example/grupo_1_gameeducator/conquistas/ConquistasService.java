@@ -5,7 +5,6 @@ import com.example.grupo_1_gameeducator.domain.Matricula;
 import com.example.grupo_1_gameeducator.domain.PlataformaEnsino;
 import com.example.grupo_1_gameeducator.domain.Resgate;
 import com.example.grupo_1_gameeducator.domain.StatusMatricula;
-import com.example.grupo_1_gameeducator.repository.CursoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +12,14 @@ import java.util.List;
 // Implementacao interna do modulo Conquistas. Nao e publica de proposito:
 // fora do pacote so se enxerga a ConquistasApi (ver FronteiraConquistasTest).
 // Quem decide as regras continua sendo o PlataformaEnsino, ja coberto pelos testes de dominio.
+// Desafio 2 (ADR-002): depende da porta CatalogoDeCursos, e nao mais do repositorio JPA.
 @Service
 class ConquistasService implements ConquistasApi {
 
-    private final CursoRepository cursoRepository;
+    private final CatalogoDeCursos catalogo;
 
-    ConquistasService(CursoRepository cursoRepository) {
-        this.cursoRepository = cursoRepository;
+    ConquistasService(CatalogoDeCursos catalogo) {
+        this.catalogo = catalogo;
     }
 
     @Override
@@ -33,9 +33,7 @@ class ConquistasService implements ConquistasApi {
             throw new IllegalStateException("Matricula ainda nao foi concluida.");
         }
 
-        Curso cursoConcluido = matricula.getCurso();
-        List<Curso> mesmaArea = cursoRepository
-                .findByArea_ValorAndIdNot(cursoConcluido.getArea(), cursoConcluido.getId());
+        List<Curso> mesmaArea = catalogo.relacionadosA(matricula.getCurso());
 
         return new PlataformaEnsino(mesmaArea).iniciarResgate(matricula);
     }

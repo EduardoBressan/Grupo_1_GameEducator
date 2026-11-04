@@ -79,6 +79,7 @@ domain/vo/       Value Objects (@Embeddable): NomeAluno, EmailAluno, TituloCurso
 repository/      Spring Data JPA
 service/         orquestração, chama as regras do domain
 conquistas/      módulo Conquistas (B1, ADR-001): ConquistasApi pública + implementação interna
+  adapter/jpa/   adapter de saída (B1, ADR-002): liga a porta CatalogoDeCursos ao Spring Data
 dto/             entrada/saída da API
 controller/      REST controllers + Swagger
 ```
