@@ -209,7 +209,7 @@ Montamos um protótipo da reorganização numa branch de trabalho (`desafio1-mod
 
 A decisão é interna ao Core: a implantação continua com um container de aplicação (`gameeducator-api`) e um banco PostgreSQL, como no `docker-compose` atual. O front web que roda hoje é HTML/CSS/JS estático em `src/main/resources/static`, servido pelo próprio Core. O arquivo `frontend-vue/index.html` é um cliente Vue avulso que chama `localhost:8080` e não faz parte do `docker-compose`. O pgAdmin do `docker-compose` é ferramenta de apoio e não aparece no diagrama.
 
-![C4 Container do GameEducator — estado-alvo após o ADR-001](docs/arquitetura/c4-container-desafio1.gif)
+![C4 Container do GameEducator — estado-alvo após o ADR-001](docs/arquitetura/c4-container-desafio1.png)
 
 *Figura 1 — C4 Container do GameEducator: estado-alvo após o ADR-001. Elementos tracejados são planejados.*
 

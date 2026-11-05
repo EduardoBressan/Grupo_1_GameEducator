@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="900" viewBox="0 0 1180 900" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <!-- C4 Container do GameEducator - estado-alvo apos o ADR-001 (Desafio 1). Elementos tracejados sao planejados. -->
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .t  { font-size: 16px; font-weight: 700; fill: #fff; text-anchor: middle; }
+      .s  { font-size: 13px; fill: #fff; text-anchor: middle; }
+      .tp { font-size: 16px; font-weight: 700; fill: #1F4E79; text-anchor: middle; }
+      .sp { font-size: 13px; fill: #1F4E79; text-anchor: middle; }
+      .lb { font-size: 13px; fill: #444; text-anchor: middle; }
+      .ln { stroke: #555; stroke-width: 1.6; fill: none; marker-end: url(#seta); }
+      .dash { stroke-dasharray: 7 5; }
+      .bg { fill: #fff; }
+    </style>
+  </defs>
+
+  <rect width="1180" height="900" fill="#ffffff"/>
+
+  <!-- Limite do container Core -->
+  <rect x="30" y="130" width="770" height="740" rx="16" fill="#F5F9FF" stroke="#438DD5" stroke-width="2"/>
+  <text x="50" y="826" font-size="14" font-weight="700" fill="#1F4E79">Core GameEducator  [Container: Java 21 / Spring Boot 3.5 — gameeducator-api, 1 deploy]</text>
+  <text x="50" y="850" font-size="13" fill="#1F4E79">Monólito Modular (estado-alvo do ADR-001)</text>
+
+  <!-- Arestas -->
+  <line class="ln" x1="640" y1="90" x2="490" y2="168"/>
+  <rect class="bg" x="614" y="98" width="126" height="20" rx="3"/>
+  <text class="lb" x="677" y="113">HTTP (porta 8080)</text>
+
+  <line class="ln dash" x1="790" y1="90" x2="940" y2="168"/>
+
+  <line class="ln" x1="350" y1="254" x2="190" y2="508"/>
+  <rect class="bg" x="232" y="372" width="76" height="20" rx="3"/>
+  <text class="lb" x="270" y="387">REST/JSON</text>
+
+  <line class="ln" x1="420" y1="254" x2="400" y2="508"/>
+  <rect class="bg" x="372" y="372" width="76" height="20" rx="3"/>
+  <text class="lb" x="410" y="387">REST/JSON</text>
+
+  <line class="ln" x1="540" y1="254" x2="610" y2="338"/>
+  <rect class="bg" x="550" y="286" width="76" height="20" rx="3"/>
+  <text class="lb" x="588" y="301">REST/JSON</text>
+
+  <line class="ln dash" x1="910" y1="262" x2="742" y2="368"/>
+  <rect class="bg" x="872" y="300" width="104" height="38" rx="3"/>
+  <text class="lb" x="924" y="315">REST/JSON</text>
+  <text class="lb" x="924" y="332">localhost:8080</text>
+
+  <path class="ln" d="M540,385 L505,385 L505,630 L180,630 L180,582"/>
+  <path class="ln" d="M505,630 L400,630 L400,582"/>
+  <rect class="bg" x="474" y="480" width="62" height="20" rx="3"/>
+  <text class="lb" x="505" y="495">interface</text>
+
+  <line class="ln dash" x1="670" y1="410" x2="670" y2="498"/>
+  <rect class="bg" x="678" y="444" width="62" height="20" rx="3"/>
+  <text class="lb" x="709" y="459">interface</text>
+
+  <line class="ln dash" x1="640" y1="590" x2="640" y2="688"/>
+  <rect class="bg" x="650" y="620" width="74" height="38" rx="3"/>
+  <text class="lb" x="687" y="635">atualiza</text>
+  <text class="lb" x="687" y="652">pontuação</text>
+
+  <line class="ln" x1="800" y1="540" x2="848" y2="540"/>
+  <text class="lb" x="824" y="530">JPA</text>
+
+  <!-- Pessoa -->
+  <rect x="560" y="20" width="310" height="70" rx="16" fill="#08427B" stroke="#052E56" stroke-width="1.5"/>
+  <text class="t" x="715" y="50">Aluno / Administrador</text>
+  <text class="s" x="715" y="72">[Pessoa]</text>
+
+  <!-- Front web estatico -->
+  <rect x="290" y="170" width="300" height="84" rx="12" fill="#1168BD" stroke="#0B4884" stroke-width="1.5"/>
+  <text class="t" x="440" y="198">Front web estático</text>
+  <text class="s" x="440" y="220">[HTML/CSS/JS em /static]</text>
+  <text class="s" x="440" y="240">servido pelo próprio Core</text>
+
+  <!-- Modulos -->
+  <rect x="540" y="340" width="200" height="70" rx="12" fill="#438DD5" stroke="#2E6295" stroke-width="1.5"/>
+  <text class="t" x="640" y="370">Módulo</text>
+  <text class="t" x="640" y="392">Matrículas</text>
+
+  <rect x="90" y="510" width="180" height="70" rx="12" fill="#438DD5" stroke="#2E6295" stroke-width="1.5"/>
+  <text class="t" x="180" y="540">Módulo</text>
+  <text class="t" x="180" y="562">Alunos</text>
+
+  <rect x="310" y="510" width="180" height="70" rx="12" fill="#438DD5" stroke="#2E6295" stroke-width="1.5"/>
+  <text class="t" x="400" y="540">Módulo</text>
+  <text class="t" x="400" y="562">Cursos</text>
+
+  <rect x="530" y="500" width="240" height="90" rx="12" fill="#ffffff" stroke="#438DD5" stroke-width="2" stroke-dasharray="7 5"/>
+  <text class="tp" x="650" y="528">Módulo Conquistas</text>
+  <text class="sp" x="650" y="550">(ConquistasApi)</text>
+  <text class="sp" x="650" y="572">[planejado]</text>
+
+  <rect x="510" y="690" width="260" height="90" rx="12" fill="#ffffff" stroke="#438DD5" stroke-width="2" stroke-dasharray="7 5"/>
+  <text class="tp" x="640" y="718">Módulo Ranking</text>
+  <text class="sp" x="640" y="740">(modelo de leitura/cache)</text>
+  <text class="sp" x="640" y="762">[planejado]</text>
+
+  <!-- Front Vue standalone -->
+  <rect x="820" y="170" width="330" height="92" rx="12" fill="#ffffff" stroke="#438DD5" stroke-width="2" stroke-dasharray="7 5"/>
+  <text class="tp" x="985" y="198">Front Vue standalone</text>
+  <text class="sp" x="985" y="220">[Cliente opcional: frontend-vue/index.html]</text>
+  <text class="sp" x="985" y="240">fora do docker-compose</text>
+
+  <!-- Banco relacional -->
+  <path d="M850,488 L850,592 A130,20 0 0 0 1110,592 L1110,488" fill="#2E6295" stroke="#1F4E79" stroke-width="1.5"/>
+  <ellipse cx="980" cy="488" rx="130" ry="20" fill="#3A73AD" stroke="#1F4E79" stroke-width="1.5"/>
+  <text class="t" x="980" y="536">Banco relacional</text>
+  <text class="s" x="980" y="558">[Container: PostgreSQL 16]</text>
+  <text class="s" x="980" y="578">(H2 no perfil local)</text>
+
+  <!-- Legenda -->
+  <rect x="850" y="760" width="300" height="96" rx="8" fill="#fff" stroke="#ccc"/>
+  <text x="866" y="784" font-size="13" font-weight="700" fill="#333">Legenda</text>
+  <rect x="866" y="796" width="26" height="16" rx="3" fill="#438DD5"/>
+  <text x="902" y="809" font-size="12" fill="#333">existente / em uso</text>
+  <rect x="866" y="824" width="26" height="16" rx="3" fill="#fff" stroke="#438DD5" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="902" y="837" font-size="12" fill="#333">planejado (tracejado)</text>
+</svg>
